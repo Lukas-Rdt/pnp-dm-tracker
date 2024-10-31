@@ -5,11 +5,32 @@ import Modal from "./components/Modal";
 import Utils from "./utils/utils";
 
 function App() {
-  const { columns, isModalOpen, setIsModalOpen } = useContext(AppContext);
-  const { addCol } = Utils();
+  const {
+    columns,
+    isModalOpen,
+    setIsModalOpen,
+    modalContent,
+    setModalContent,
+  } = useContext(AppContext);
+  const { addCol, addCard } = Utils();
 
-  const handleAddColumn = (name) => {
-    addCol(name);
+  const handleAdding = (data) => {
+    if (modalContent === "column") {
+      addCol(data.name);
+    } else if (modalContent === "card") {
+      addCard({
+        name: data.name,
+        column: parseInt(data.column),
+        desc: data.desc,
+        maxUses: parseInt(data.maxUses),
+        usesLeft: parseInt(data.usesLeft),
+      });
+    }
+  };
+
+  const openColModal = () => {
+    setModalContent("column");
+    setIsModalOpen(true);
   };
 
   return (
@@ -18,7 +39,11 @@ function App() {
         {columns.map((column) => (
           <Column key={column.id} column={column} />
         ))}
-        <button onClick={() => setIsModalOpen(true)}>New Col</button>
+        <button
+          onClick={openColModal}
+          className="p-3 w-[300px] h-min bg-neutral-600 rounded-lg">
+          New Col
+        </button>
       </div>
 
       <div className="w-1/4 bg-neutral-800 p-4">
@@ -30,7 +55,7 @@ function App() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddColumn}
+        onSubmit={handleAdding}
       />
     </div>
   );

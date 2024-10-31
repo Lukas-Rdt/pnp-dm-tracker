@@ -8,6 +8,7 @@ function Utils() {
     return obj && typeof obj.id === "number" && typeof obj.name === "string";
   }
 
+  /*
   function validateCardObject(obj) {
     return (
       obj &&
@@ -17,6 +18,7 @@ function Utils() {
       typeof obj.desc === "string"
     );
   }
+    */
 
   function addCol(name) {
     const usedIds = columns.map((col) => col.id);
@@ -38,7 +40,7 @@ function Utils() {
     }
   }
 
-  function addCard(name, col, desc) {
+  function addCard(cardData) {
     const usedIds = cards.map((card) => card.id);
     let newId = 1;
 
@@ -48,16 +50,18 @@ function Utils() {
 
     const newCardEntry = {
       id: newId,
-      name: name,
-      col: col,
-      desc: desc,
+      ...cardData,
     };
 
+    console.log(newCardEntry);
+
+    setCards([...cards, newCardEntry]);
+    /*
     if (validateCardObject(newCardEntry)) {
-      setCards([...cards, newCardEntry]);
     } else {
       console.log(`Failed to add new Card to Col ${col}`);
     }
+      */
   }
 
   function deleteCol(id) {

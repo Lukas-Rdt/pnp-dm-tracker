@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const AppContext = createContext();
 
@@ -50,7 +50,13 @@ export const AppContextProvider = ({ children }) => {
     },
   ]);
 
+  useEffect(() => {
+    console.log(cards);
+  }, [cards]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [cardColNum, setCardColNum] = useState(null);
 
   const values = {
     columns,
@@ -59,6 +65,10 @@ export const AppContextProvider = ({ children }) => {
     setCards,
     isModalOpen,
     setIsModalOpen,
+    modalContent,
+    setModalContent,
+    cardColNum,
+    setCardColNum,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
