@@ -1,7 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useState } from "react";
-import { arrayMove } from "@dnd-kit/sortable";
 
 export const AppContext = createContext();
 
@@ -81,41 +80,6 @@ export const AppContextProvider = ({ children }) => {
       .sort((a, b) => a.pos - b.pos);
   };
 
-  const moveColumn = (fromIndex, toIndex) => {
-    setColumns((prevColumns) => {
-      const newColumns = arrayMove(prevColumns, fromIndex, toIndex);
-      return newColumns.map((col, index) => ({ ...col, pos: index + 1 }));
-    });
-  };
-
-  const moveCard = (cardId, newColumnId, newPos) => {
-    setCards((prevCards) => {
-      const cardToMove = prevCards.find((card) => card.id === cardId);
-
-      // Karten in der alten Spalte neu anordnen
-      const updatedCards = prevCards
-        .filter((card) => card.id !== cardId)
-        .map((card) => {
-          if (card.column === cardToMove.column && card.pos > cardToMove.pos) {
-            return { ...card, pos: card.pos - 1 };
-          }
-          return card;
-        });
-
-      // Karten in der neuen Spalte einfügen und neu sortieren
-      updatedCards.push({ ...cardToMove, column: newColumnId, pos: newPos });
-      const sortedCards = updatedCards
-        .filter((card) => card.column === newColumnId)
-        .sort((a, b) => a.pos - b.pos)
-        .map((card, index) => ({ ...card, pos: index + 1 }));
-
-      // Aktualisiere die Positionen in der alten und neuen Spalte
-      return updatedCards
-        .filter((card) => card.column !== newColumnId)
-        .concat(sortedCards);
-    });
-  };
-
   const values = {
     columns,
     setColumns,
@@ -124,8 +88,6 @@ export const AppContextProvider = ({ children }) => {
     addColumn,
     addCard,
     getCardsByColumn,
-    moveColumn,
-    moveCard,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
