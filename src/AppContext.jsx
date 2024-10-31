@@ -50,44 +50,15 @@ export const AppContextProvider = ({ children }) => {
     },
   ]);
 
-  const addColumn = (name) => {
-    const pos = columns.length + 1;
-    const newColumn = { id: Date.now(), name, pos };
-    setColumns((prevColumns) =>
-      [...prevColumns, newColumn].sort((a, b) => a.pos - b.pos)
-    );
-  };
-
-  const addCard = (name, column, description, maxUses) => {
-    const pos = getCardsByColumn(column).length + 1;
-    const newCard = {
-      id: Date.now(),
-      name,
-      column,
-      pos,
-      description,
-      maxUses,
-      usesLeft: maxUses,
-    };
-    setCards((prevCards) =>
-      [...prevCards, newCard].sort((a, b) => a.pos - b.pos)
-    );
-  };
-
-  const getCardsByColumn = (columnId) => {
-    return cards
-      .filter((card) => card.column === columnId)
-      .sort((a, b) => a.pos - b.pos);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const values = {
     columns,
     setColumns,
     cards,
     setCards,
-    addColumn,
-    addCard,
-    getCardsByColumn,
+    isModalOpen,
+    setIsModalOpen,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

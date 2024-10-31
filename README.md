@@ -1,8 +1,16 @@
-# React + Vite
+# PNP DM Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Simple Project for my DnD Campaign to track player uses of spells and similar things.
 
-Currently, two official plugins are available:
+[GitHub Pages](https://lukas-rdt.github.io/pnp-dm-tracker/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Current Features:
+
+- ..
+
+Currently planned Features:
+
+- Adding and removing players
+- Adding and removing cards from players
+- One click (short or long) rest - restores charges to all abilities depending on variant
+- Repositioning cards in and between players
