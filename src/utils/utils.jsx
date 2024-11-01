@@ -4,22 +4,6 @@ import { AppContext } from "../AppContext";
 function Utils() {
   const { columns, setColumns, cards, setCards } = useContext(AppContext);
 
-  function validateColObject(obj) {
-    return obj && typeof obj.id === "number" && typeof obj.name === "string";
-  }
-
-  /*
-  function validateCardObject(obj) {
-    return (
-      obj &&
-      typeof obj.id === "number" &&
-      typeof obj.name === "string" &&
-      typeof obj.col === "number" &&
-      typeof obj.desc === "string"
-    );
-  }
-    */
-
   function addCol(name) {
     const usedIds = columns.map((col) => col.id);
     let newId = 1;
@@ -33,11 +17,7 @@ function Utils() {
       name: name,
     };
 
-    if (validateColObject(newColEntry)) {
-      setColumns([...columns, newColEntry]);
-    } else {
-      console.log("Failed to add new column");
-    }
+    setColumns([...columns, newColEntry]);
   }
 
   function addCard(cardData) {
@@ -56,12 +36,6 @@ function Utils() {
     console.log(newCardEntry);
 
     setCards([...cards, newCardEntry]);
-    /*
-    if (validateCardObject(newCardEntry)) {
-    } else {
-      console.log(`Failed to add new Card to Col ${col}`);
-    }
-      */
   }
 
   function deleteCol(id) {
@@ -111,6 +85,14 @@ function Utils() {
     setColumns(updatedColumns);
   }
 
+  function updateCard(updatedCardData) {
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card.id === updatedCardData.id ? updatedCardData : card
+      )
+    );
+  }
+
   return {
     addCol,
     addCard,
@@ -120,6 +102,7 @@ function Utils() {
     findCard,
     getCardsFromCol,
     moveCol,
+    updateCard,
   };
 }
 

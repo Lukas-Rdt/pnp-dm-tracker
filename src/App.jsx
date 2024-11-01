@@ -2,35 +2,27 @@ import { useContext } from "react";
 import { AppContext } from "./AppContext";
 import Column from "./components/Column";
 import Modal from "./components/Modal";
-import Utils from "./utils/utils";
 
 function App() {
   const {
     columns,
     isModalOpen,
     setIsModalOpen,
-    modalContent,
     setModalContent,
+    setCardColNum,
+    setSelectedCard,
   } = useContext(AppContext);
-  const { addCol, addCard } = Utils();
-
-  const handleAdding = (data) => {
-    if (modalContent === "column") {
-      addCol(data.name);
-    } else if (modalContent === "card") {
-      addCard({
-        name: data.name,
-        column: parseInt(data.column),
-        desc: data.desc,
-        maxUses: parseInt(data.maxUses),
-        usesLeft: parseInt(data.usesLeft),
-      });
-    }
-  };
 
   const openColModal = () => {
     setModalContent("column");
     setIsModalOpen(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalOpen(false);
+    setModalContent(null);
+    setCardColNum(null);
+    setSelectedCard(null);
   };
 
   return (
@@ -52,11 +44,7 @@ function App() {
       </div>
 
       {/* Modal to add Col/Cards */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAdding}
-      />
+      <Modal isOpen={isModalOpen} onClose={onModalClose} />
     </div>
   );
 }
