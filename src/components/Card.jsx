@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
+import useUtils from "../utils/utils";
 
 export const Card = ({ card }) => {
   const { setModalContent, setIsModalOpen, setCardColNum, setSelectedCard } =
     useContext(AppContext);
+
+  const { moveCard } = useUtils();
 
   const openEditModal = () => {
     setCardColNum(card.column);
@@ -14,22 +17,31 @@ export const Card = ({ card }) => {
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid gray",
-        padding: "5px",
-        margin: "5px 0",
-        cursor: "pointer",
-      }}
-      onClick={openEditModal}>
-      <h4>{card.name}</h4>
-      <p>ID: {card.id}</p>
-      <p>Position: {card.pos}</p>
-      <p>Beschreibung: {card.description}</p>
-      <p>
-        Verbleibende Nutzungen: {card.usesLeft}/{card.maxUses}
-      </p>
-      <p>Spalte: {card.column}</p>
+    <div className="border border-gray-500 my-2 rounded-lg flex overflow-hidden">
+      <div className="cursor-pointer w-full p-2" onClick={openEditModal}>
+        <p>{card.name}</p>
+        <p>ID: {card.id}</p>
+        <p>Position: {card.pos}</p>
+        <p>Description: {card.description}</p>
+        <p>
+          Uses Left: {card.usesLeft}/{card.maxUses}
+        </p>
+        <p>Recharge form: {card.rechargeForm}</p>
+        <p>Recharge type: {card.rechargeType}</p>
+        <p>Recharge amount: {card.rechargeAmount}</p>
+      </div>
+      <div className="w-10 flex flex-col justify-between border-l border-gray-600">
+        <div
+          onClick={() => moveCard(card.id, "up")}
+          className="cursor-pointer text-center hover:bg-neutral-600 duration-200 border-b border-gray-600">
+          ↑
+        </div>
+        <div
+          onClick={() => moveCard(card.id, "down")}
+          className="cursor-pointer text-center hover:bg-neutral-600 duration-200 border-t border-gray-600">
+          ↓
+        </div>
+      </div>
     </div>
   );
 };

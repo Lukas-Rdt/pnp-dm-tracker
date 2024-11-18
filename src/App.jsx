@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { AppContext } from "./AppContext";
 import Column from "./components/Column";
 import Modal from "./components/Modal";
+import Utils from "./utils/utils";
 
 function App() {
   const {
@@ -12,6 +13,8 @@ function App() {
     setCardColNum,
     setSelectedCard,
   } = useContext(AppContext);
+
+  const { handleRecharge } = Utils();
 
   const openColModal = () => {
     setModalContent("column");
@@ -39,8 +42,19 @@ function App() {
       </div>
 
       <div className="w-1/4 bg-neutral-800 p-4">
-        <p className="text-center text-xl font-semibold">Control Area</p>
-        <p>{isModalOpen}</p>
+        <p className="text-center text-xl font-semibold mb-10">Control Area</p>
+        <div className="flex justify-evenly">
+          <div
+            className="p-3 bg-neutral-600 rounded hover:bg-neutral-500 duration-200 hover:cursor-pointer"
+            onClick={() => handleRecharge("short")}>
+            Short Rest
+          </div>
+          <div
+            className="p-3 bg-neutral-600 rounded hover:bg-neutral-500 duration-200 hover:cursor-pointer"
+            onClick={() => handleRecharge("long")}>
+            Long Rest
+          </div>
+        </div>
       </div>
 
       {/* Modal to add Col/Cards */}

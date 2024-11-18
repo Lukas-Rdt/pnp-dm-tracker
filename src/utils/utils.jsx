@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
-function Utils() {
+function useUtils() {
   const { columns, setColumns, cards, setCards } = useContext(AppContext);
 
   function addCol(name) {
@@ -28,8 +28,20 @@ function Utils() {
       newId++;
     }
 
+    const cardsInColumn = cards.filter(
+      (card) => card.column === cardData.column
+    );
+
+    const usedPos = cardsInColumn.map((card) => card.pos);
+    let newPos = 1;
+
+    while (usedPos.includes(newPos)) {
+      newPos++;
+    }
+
     const newCardEntry = {
       id: newId,
+      pos: newPos,
       ...cardData,
     };
 
@@ -57,7 +69,9 @@ function Utils() {
   }
 
   function getCardsFromCol(colId) {
-    return cards.filter((card) => card.column === colId);
+    return cards
+      .filter((card) => card.column === colId)
+      .sort((a, b) => a.pos - b.pos);
   }
 
   function moveCol(currentId, direction) {
@@ -76,7 +90,6 @@ function Utils() {
     }
 
     const updatedColumns = [...columns];
-    // Swap columns
     [updatedColumns[colIndex], updatedColumns[newIndex]] = [
       updatedColumns[newIndex],
       updatedColumns[colIndex],
@@ -85,11 +98,68 @@ function Utils() {
     setColumns(updatedColumns);
   }
 
+  const moveCard = (id, direction) => {
+    setCards((prevCards) => {
+      // Die Karte und die aktuelle Spalte finden
+      const currentCard = prevCards.find((card) => card.id === id);
+      if (!currentCard) return prevCards; // Falls die Karte nicht existiert
+
+      const currentColumn = currentCard.column;
+
+      // Karten in der gleichen Spalte filtern und nach Position sortieren
+      const cardsInColumn = prevCards
+        .filter((card) => card.column === currentColumn)
+        .sort((a, b) => a.pos - b.pos);
+
+      // Die Position der aktuellen Karte im Array finden
+      const currentIndex = cardsInColumn.findIndex((card) => card.id === id);
+      if (currentIndex === -1) return prevCards; // Sicherheit
+
+      // Zielindex berechnen
+      const targetIndex =
+        direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+      // Prüfen, ob der Zielindex gültig ist
+      if (targetIndex < 0 || targetIndex >= cardsInColumn.length) {
+        return prevCards; // Keine Bewegung möglich
+      }
+
+      // Karten tauschen
+      const targetCard = cardsInColumn[targetIndex];
+      [currentCard.pos, targetCard.pos] = [targetCard.pos, currentCard.pos];
+
+      // State mit den aktualisierten Karten zurückgeben
+      return [...prevCards];
+    });
+  };
+
   function updateCard(updatedCardData) {
     setCards((prevCards) =>
       prevCards.map((card) =>
         card.id === updatedCardData.id ? updatedCardData : card
       )
+    );
+  }
+
+  function handleRecharge(rechargeForm, column = null) {
+    setCards((prevCards) =>
+      prevCards.map((card) => {
+        const shouldRecharge =
+          ((rechargeForm === "long" &&
+            (card.rechargeForm === "long" || card.rechargeForm === "short")) ||
+            card.rechargeForm === rechargeForm) &&
+          card.rechargeType === "fixed" &&
+          (column === null || card.column === column);
+
+        if (shouldRecharge) {
+          const newUsesLeft = Math.min(
+            card.usesLeft + card.rechargeAmount,
+            card.maxUses
+          );
+          return { ...card, usesLeft: newUsesLeft };
+        }
+        return card;
+      })
     );
   }
 
@@ -103,7 +173,9 @@ function Utils() {
     getCardsFromCol,
     moveCol,
     updateCard,
+    handleRecharge,
+    moveCard,
   };
 }
 
-export default Utils;
+export default useUtils;
