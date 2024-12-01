@@ -18,7 +18,8 @@ Currently planned:
 - Removing players/Columns
 - Removing cards from players
 - On rest gaining rolled amount of uses
-- Styling
+- Card options (without opening modal)
+- Overall style
 
 Possible features:
 
