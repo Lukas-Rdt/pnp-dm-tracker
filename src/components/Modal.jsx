@@ -49,6 +49,23 @@ const Modal = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleIncrement = (field) => {
+    setFormData((prev) => {
+      const newValue = Math.max(0, parseInt(prev[field] || "0", 10) + 1);
+      if (field === "usesLeft" && newValue > parseInt(prev.maxUses, 10)) {
+        return { ...prev, [field]: newValue, maxUses: newValue };
+      }
+      return { ...prev, [field]: newValue };
+    });
+  };
+
+  const handleDecrement = (field) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: Math.max(0, parseInt(prev[field] || "0", 10) - 1),
+    }));
+  };
+
   const handleRechargeFormChange = (value) => {
     setFormData((prev) => ({ ...prev, rechargeForm: value }));
   };
@@ -88,6 +105,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
@@ -107,51 +125,90 @@ const Modal = ({ isOpen, onClose }) => {
           onSubmit={handleSubmit}
           className="flex flex-col justify-between space-y-4 h-full">
           <div className="flex h-full space-x-5">
-            <div className="w-1/2 flex flex-col space-y-4">
+            <div className="w-1/2 flex flex-col space-y-1">
+              <label htmlFor="columnName" className="text-white">
+                Column/Card Name
+              </label>
               <input
                 type="text"
+                id="columnName"
                 name="columnName"
                 required
                 value={formData.columnName || ""}
                 onChange={handleChange}
-                placeholder="Spaltenname/Kartenname"
+                placeholder="Enter name"
                 className="bg-neutral-700 border border-gray-300 p-2 rounded"
                 autoComplete="off"
               />
               {modalContent === "card" && (
                 <>
+                  <label htmlFor="description" className="text-white">
+                    Description
+                  </label>
                   <textarea
+                    id="description"
                     name="description"
                     value={formData.description || ""}
                     onChange={handleChange}
-                    placeholder="description"
+                    placeholder="Enter description"
                     className="bg-neutral-700 border border-gray-300 p-2 rounded h-80 w-full resize-none overflow-y-auto"
                     autoComplete="off"
                   />
                 </>
               )}
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2 flex flex-col space-y-1">
               {modalContent === "card" && (
                 <>
-                  <input
-                    type="number"
-                    name="maxUses"
-                    value={formData.maxUses || ""}
-                    onChange={handleChange}
-                    placeholder="max charges"
-                    className="bg-neutral-700 border border-gray-300 p-2 rounded w-full"
-                    autoComplete="off"
-                  />
-                  <input
-                    type="number"
-                    name="usesLeft"
-                    value={formData.usesLeft || ""}
-                    onChange={handleChange}
-                    placeholder="charges left"
-                    className="bg-neutral-700 border border-gray-300 p-2 rounded w-full"
-                    autoComplete="off"
-                  />
+                  <label className="text-white">Max Charges</label>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDecrement("maxUses")}
+                      className="bg-red-500 text-white px-3 py-1 rounded">
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      name="maxUses"
+                      value={formData.maxUses || ""}
+                      onChange={handleChange}
+                      placeholder="Max charges"
+                      className="bg-neutral-700 border border-gray-300 p-2 rounded w-full"
+                      autoComplete="off"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleIncrement("maxUses")}
+                      className="bg-green-500 text-white px-3 py-1 rounded">
+                      +
+                    </button>
+                  </div>
+                  <label className="text-white">Charges Left</label>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDecrement("usesLeft")}
+                      className="bg-red-500 text-white px-3 py-1 rounded">
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      name="usesLeft"
+                      value={formData.usesLeft || ""}
+                      onChange={handleChange}
+                      placeholder="Charges left"
+                      className="bg-neutral-700 border border-gray-300 p-2 rounded w-full"
+                      autoComplete="off"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleIncrement("usesLeft")}
+                      className="bg-green-500 text-white px-3 py-1 rounded">
+                      +
+                    </button>
+                  </div>
+                  <label className="text-white">Recharge Form</label>
                   <div className="flex justify-between">
                     <div
                       onClick={() => handleRechargeFormChange("short")}
@@ -181,6 +238,7 @@ const Modal = ({ isOpen, onClose }) => {
                       other
                     </div>
                   </div>
+                  <label className="text-white">Recharge Type</label>
                   <div className="flex justify-between mt-4">
                     <div
                       onClick={() => handleRechargeTypeChange("fixed")}
@@ -201,15 +259,19 @@ const Modal = ({ isOpen, onClose }) => {
                       Rolled
                     </div>
                   </div>
+                  <label htmlFor="rechargeAmount" className="text-white">
+                    Recharge Amount
+                  </label>
                   <input
+                    id="rechargeAmount"
                     type={formData.rechargeType === "fixed" ? "number" : "text"}
                     name="rechargeAmount"
                     value={formData.rechargeAmount || ""}
                     onChange={handleChange}
                     placeholder={
                       formData.rechargeType === "fixed"
-                        ? "Anzahl für Fixed"
-                        : "String für Rolled"
+                        ? "Amount for Fixed"
+                        : "String for Rolled"
                     }
                     className="bg-neutral-700 border border-gray-300 p-2 rounded w-full mt-2"
                     autoComplete="off"

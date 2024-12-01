@@ -17,18 +17,19 @@ export const Card = ({ card }) => {
   };
 
   return (
-    <div className="border border-gray-500 my-2 rounded-lg flex overflow-hidden">
+    <div className="border border-gray-600 my-2 rounded-lg flex overflow-hidden">
       <div className="cursor-pointer w-full p-2" onClick={openEditModal}>
-        <p>{card.name}</p>
-        <p>ID: {card.id}</p>
-        <p>Position: {card.pos}</p>
-        <p>Description: {card.description}</p>
-        <p>
-          Uses Left: {card.usesLeft}/{card.maxUses}
+        <div className="flex justify-between">
+          <p className="text-gray-200 text-xl">{card.name}</p>
+          <p className="text-gray-400 text-sm">ID: {card.id}</p>
+        </div>
+        <p className="text-gray-400">Description: {card.description}</p>
+        <p className="text-gray-400">
+          Uses: {card.usesLeft}/{card.maxUses}
         </p>
-        <p>Recharge form: {card.rechargeForm}</p>
-        <p>Recharge type: {card.rechargeType}</p>
-        <p>Recharge amount: {card.rechargeAmount}</p>
+        <p className="text-gray-400">Recharge form: {card.rechargeForm}</p>
+        <p className="text-gray-400">Recharge type: {card.rechargeType}</p>
+        <p className="text-gray-400">Recharge amount: {card.rechargeAmount}</p>
       </div>
       <div className="w-10 flex flex-col justify-between border-l border-gray-600">
         <div

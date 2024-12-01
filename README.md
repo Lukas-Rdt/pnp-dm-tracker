@@ -11,6 +11,7 @@ Currently implemented:
 - One click short or long rest for all cards
 - Repositioning players
 - Reposition cards in players
+- Saving Data
 
 Currently planned:
 
@@ -19,6 +20,6 @@ Currently planned:
 - On rest gaining rolled amount of uses
 - Styling
 
-Posiible features:
+Possible features:
 
 - Relocating cards between players
